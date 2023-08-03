@@ -5,7 +5,7 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=somepassword
-      - MYSQL_DATABASE=bpa-dev
+      - MYSQL_DATABASE=keep-notes
     volumes:
       - "keep-notes:/var/lib/mysql"
     ports:
