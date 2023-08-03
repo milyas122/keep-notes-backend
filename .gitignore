@@ -1,0 +1,12 @@
+node_modules
+
+build
+
+.npm
+
+#envFile
+.env
+
+*.sh
+
+*.sample.*
