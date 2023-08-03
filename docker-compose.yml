@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=somepassword
+      - MYSQL_DATABASE=bpa-dev
+    volumes:
+      - "keep-notes:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+
+volumes:
+  keep-notes:
