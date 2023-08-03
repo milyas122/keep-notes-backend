@@ -1,10 +1,12 @@
 {
-  "name": "backend",
+  "name": "google-keep-notes-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "env-cmd rimraf ./build && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "start": "npm run build && env-cmd node build/index.js",
+    "dev": "env-cmd nodemon"
   },
   "keywords": [],
   "author": "",
@@ -26,5 +28,8 @@
     "tsc-alias": "^1.8.7",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "env-cmd": "^10.1.0"
   }
 }
