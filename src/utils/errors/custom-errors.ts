@@ -21,7 +21,7 @@ interface MessageAndStatus {
   statusCode: number;
 }
 
-class AppError extends Error implements MessageAndStatus {
+class AppError extends Error {
   message: string;
   statusCode: number;
   constructor({ message, statusCode }: MessageAndStatus) {
