@@ -6,4 +6,9 @@ const userSchema = object().shape({
   name: string().required("Name is required"),
 });
 
-export { userSchema };
+const loginSchema = object().shape({
+  email: string().email("Email is invalid").required("Email is required"),
+  password: string().required("password is required field"),
+});
+
+export { userSchema, loginSchema };
