@@ -1,4 +1,4 @@
-import UserRepository from "@/db/repository/user-repo";
+import UserRepository from "@/db/repository/user";
 import { BadRequest } from "@/utils/errors/custom-errors";
 import { createHashPassword, comparePassword, generateToken } from "@/utils";
 import { User } from "@/db/entities";

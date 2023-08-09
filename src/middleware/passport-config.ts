@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { appEnvVars } from "@/utils/env-vars";
 import passport from "passport";
-import UserRepository from "@/db/repository/user-repo";
+import UserRepository from "@/db/repository/user";
 
 const userRepo = new UserRepository();
 
