@@ -1,7 +1,7 @@
-import UserService from "@/services/user.services";
+import UserService from "@/services/user";
 import { Request, Response } from "express";
 import { errorHandler } from "@/utils/errors";
-import { userSchema, loginSchema } from "@/utils/validations/user.validation";
+import { userSchema, loginSchema } from "@/utils/validations/user";
 import { validate } from "@/utils/validations";
 
 const service = new UserService();
