@@ -1,7 +1,6 @@
 import { User } from "../entities";
 import dataSource from "../index";
 import { Repository } from "typeorm";
-import { AppError } from "@/utils/errors/custom-errors";
 
 interface FindUserOptions {
   id?: string;
@@ -26,7 +25,7 @@ class UserRepository {
     if (id) where["id"] = id;
     if (email) where["email"] = email;
 
-    const user = await this.repository.findOneBy(where);
+    const user = await this.repository.findOne({ where });
 
     return user;
   }

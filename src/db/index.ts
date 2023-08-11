@@ -8,7 +8,7 @@ const dataSource = new DataSource({
   username: dbEnvVars.username,
   password: dbEnvVars.password,
   port: +dbEnvVars.port,
-  synchronize: true,
+  synchronize: false,
   database: "google-keep-notes",
   entities: [path.join(__dirname, "./entities/**/*.{ts,js}")],
 });
