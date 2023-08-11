@@ -3,12 +3,13 @@ import {
   Column,
   Entity,
   ManyToOne,
-  OneToMany,
+  JoinColumn,
 } from "typeorm";
 import User from "./user";
 import Note from "./note";
+import Label from "./label";
 
-@Entity()
+@Entity({ name: "userNote" })
 export default class UserNote {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -22,6 +23,10 @@ export default class UserNote {
   @ManyToOne(() => User, (user) => user.notes)
   user: User;
 
-  @OneToMany(() => Note, (note) => note.userNote)
-  notes: Note[];
+  @ManyToOne(() => Note, (note) => note.userNote)
+  note: Note;
+
+  @ManyToOne(() => Label)
+  @JoinColumn()
+  label: Label;
 }
