@@ -2,21 +2,9 @@ import { NoteList } from "../entities";
 import dataSource from "../index";
 import { Repository } from "typeorm";
 import NoteListItemRepository from "./note-list-item";
+import { CreateNoteListOption } from "./types";
 
 const listItemRepo = new NoteListItemRepository();
-
-type BaseNote = {
-  content: string;
-  isCompleted: boolean;
-  order: number;
-};
-
-type NoteListItems = {
-  hasItems: true;
-  noteItemList: BaseNote[];
-};
-
-type CreateNoteListOption = BaseNote & ({ hasItems: false } | NoteListItems);
 
 class NoteListRepository {
   private repository: Repository<NoteList>;

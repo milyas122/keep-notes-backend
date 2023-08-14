@@ -1,14 +1,7 @@
 import { Repository } from "typeorm";
 import { Note } from "../entities";
 import dataSource from "../index";
-import NoteImageRepository from "./note-image";
-import NoteListRepository from "./note-list";
-import ThemeRepository from "./theme";
-import { CreateNoteOptions } from "../types";
-
-const noteImageRepo = new NoteImageRepository();
-const noteListRepo = new NoteListRepository();
-const themeRepo = new ThemeRepository();
+import { CreateNoteOption } from "./types";
 
 class NoteRepository {
   private repository: Repository<Note>;
@@ -17,27 +10,8 @@ class NoteRepository {
     this.repository = dataSource.getRepository(Note);
   }
 
-  async createNote(args: CreateNoteOptions): Promise<Note | undefined> {
-    const note = new Note();
-
-    args?.title && (note.title = args.title);
-
-    note.hasCheckBoxEnable = args.hasCheckBoxEnable;
-
-    if (args?.imageUrls && args?.imageUrls.length > 0) {
-      note.images = await noteImageRepo.getImages(args.imageUrls);
-    }
-
-    if (args?.theme) {
-      note.theme = await themeRepo.getTheme({ color: args.theme });
-    }
-
-    if (args.hasCheckBoxEnable) {
-      const noteListObj = await noteListRepo.createNoteList(args.noteList);
-      noteListObj && (note.noteList = noteListObj);
-    } else if (args.hasCheckBoxEnable === false) {
-      args?.content && (note.content = args.content);
-    }
+  async createNote(args: CreateNoteOption): Promise<Note | undefined> {
+    const note = await this.repository.create({ ...args });
 
     const noteObj = await this.repository.save(note);
 
