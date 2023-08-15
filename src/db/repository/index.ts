@@ -7,8 +7,6 @@ import ThemeRepository from "./theme";
 import UserNoteRepository from "./user-note";
 import UserRepository from "./user";
 
-import * as entity from "../entities";
-
 export {
   LabelRepository,
   NoteImageRepository,
