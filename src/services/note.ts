@@ -67,6 +67,7 @@ class NoteService {
 
     if (!note) throw new ApiError({ message: "something bad happened .." });
     userNoteArgs.note = note;
+    userNoteArgs.owner = true; // Help to find an owner of the note
 
     await this.userNoteRepo.createUserNote({ ...userNoteArgs });
   }
