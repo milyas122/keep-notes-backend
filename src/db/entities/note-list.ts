@@ -25,7 +25,7 @@ export default class NoteList {
   @Column({ default: false })
   hasItems: boolean;
 
-  @ManyToOne(() => Note, (note) => note.noteList)
+  @ManyToOne(() => Note, (note) => note.noteList, { onDelete: "CASCADE" })
   note: Note;
 
   @OneToMany(() => NoteListItem, (noteListItem) => noteListItem.noteList)

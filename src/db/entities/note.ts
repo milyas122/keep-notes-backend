@@ -48,6 +48,6 @@ export default class Note {
   @OneToMany(() => UserNote, (userNote) => userNote.note)
   userNote: UserNote[];
 
-  @ManyToOne(() => Theme, (theme) => theme.notes)
+  @ManyToOne(() => Theme, (theme) => theme.notes, { onDelete: "SET NULL" })
   theme: Theme;
 }

@@ -20,13 +20,16 @@ export default class UserNote {
   @Column({ default: false })
   pined: boolean;
 
-  @ManyToOne(() => User, (user) => user.notes)
+  @Column({ default: false })
+  owner: boolean;
+
+  @ManyToOne(() => User, (user) => user.notes, { onDelete: "CASCADE" })
   user: User;
 
-  @ManyToOne(() => Note, (note) => note.userNote)
+  @ManyToOne(() => Note, (note) => note.userNote, { onDelete: "CASCADE" })
   note: Note;
 
-  @ManyToOne(() => Label)
+  @ManyToOne(() => Label, { onDelete: "CASCADE" })
   @JoinColumn()
   label: Label;
 }

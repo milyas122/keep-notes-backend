@@ -15,6 +15,8 @@ export default class NoteListItem {
   @Column()
   order: number;
 
-  @ManyToOne(() => NoteList, (noteList) => noteList.noteItemList)
+  @ManyToOne(() => NoteList, (noteList) => noteList.noteItemList, {
+    onDelete: "CASCADE",
+  })
   noteList: NoteList;
 }
