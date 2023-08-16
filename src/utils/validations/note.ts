@@ -1,14 +1,9 @@
 import { object, string, boolean, array, number } from "yup";
-import { v4 as uuidv4 } from "uuid";
 
 const noteListItem = object().shape({
   content: string().required().label("Content"),
   isCompleted: boolean().default(false).label("Is Completed"),
   order: number().required().label("Order"),
-});
-
-const updateNoteListItem = noteListItem.shape({
-  id: string().uuid().default(uuidv4()),
 });
 
 const noteList = object().shape({
@@ -18,17 +13,6 @@ const noteList = object().shape({
   hasItems: boolean().default(false).label("Has Items"),
   noteItemList: array()
     .of(noteListItem)
-    .label("NoteItemList")
-    .when("hasItems", {
-      is: true,
-      then: (schema) => schema.required().min(1),
-    }),
-});
-
-const updateNoteList = noteList.shape({
-  id: string().uuid(uuidv4()),
-  noteItemList: array()
-    .of(updateNoteListItem)
     .label("NoteItemList")
     .when("hasItems", {
       is: true,
@@ -68,13 +52,8 @@ const noteSchema = object()
     }
   );
 
-const updateNoteSchema = noteSchema.shape({
-  id: string().required().uuid(),
-  noteList: array()
-    .of(noteList)
-    .when("hasCheckBoxEnable", {
-      is: true,
-      then: (schema) => schema.required().min(1),
-    }),
+const deleteNoteSchema = object().shape({
+  noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
 });
-export { noteSchema, updateNoteSchema };
+
+export { noteSchema, deleteNoteSchema };

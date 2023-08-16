@@ -5,6 +5,7 @@ export type CreateUserNoteOption = {
   user: entity.User;
   label?: entity.Label;
   note: entity.Note;
+  owner: boolean;
 };
 
 type SimpleNote = {

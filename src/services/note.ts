@@ -71,6 +71,32 @@ class NoteService {
 
     await this.userNoteRepo.createUserNote({ ...userNoteArgs });
   }
+
+  async deleteNotes(userId: string, ids: string[]): Promise<void> {
+    const userNoteList = await this.userNoteRepo.getByUserIdAndNoteIds(
+      userId,
+      ids
+    );
+
+    const userNoteIds = [];
+    const noteIds = [];
+
+    for (const item of userNoteList) {
+      if (item.userNote_owner === 1) {
+        noteIds.push(item.note_id);
+      } else if (item.userNote_owner === 0) {
+        userNoteIds.push(item.userNote_id);
+      }
+    }
+
+    if (noteIds.length > 0) {
+      await this.noteRepo.deleteNote(noteIds);
+    }
+
+    if (userNoteIds.length > 0) {
+      await this.userNoteRepo.deleteByIds(userNoteIds);
+    }
+  }
 }
 
 export { NoteService };
