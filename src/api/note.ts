@@ -86,3 +86,19 @@ export async function pinNotes(req: Request, res: Response): Promise<Response> {
     return errorHandler(res, error, { logKey: "PinNotes" });
   }
 }
+
+export async function unPinNotes(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const { noteIds } = await validate(schema.unPinNotesSchema, req.body);
+
+    await service.unPinNotes(userId, noteIds);
+
+    return res.status(200).json({ message: "notes are unpinned successfully" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "PinNotes" });
+  }
+}

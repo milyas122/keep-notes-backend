@@ -81,6 +81,17 @@ class UserNoteRepository {
       throw new BadRequest({ message: "notes not found" });
     }
   }
+
+  async unPinNotes(userId, ids: string[]): Promise<void> {
+    const { affected } = await this.repository.update(
+      { user: { id: userId }, note: { id: In(ids) } },
+      { pined: false }
+    );
+
+    if (affected === 0) {
+      throw new BadRequest({ message: "notes not found" });
+    }
+  }
 }
 
 export default UserNoteRepository;

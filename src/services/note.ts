@@ -109,6 +109,10 @@ class NoteService {
   async pinNotes(userId: string, noteIds: string[]): Promise<void> {
     await this.userNoteRepo.pinNotes(userId, noteIds);
   }
+
+  async unPinNotes(userId: string, noteIds: string[]): Promise<void> {
+    await this.userNoteRepo.unPinNotes(userId, noteIds);
+  }
 }
 
 export { NoteService };

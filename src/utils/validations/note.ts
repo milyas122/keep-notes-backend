@@ -62,3 +62,5 @@ export const archiveNotesSchema = notesIdSchema;
 export const unArchiveNotesSchema = notesIdSchema;
 
 export const pinNotesSchema = notesIdSchema;
+
+export const unPinNotesSchema = notesIdSchema;
