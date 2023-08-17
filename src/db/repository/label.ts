@@ -68,6 +68,14 @@ class LabelRepository {
       throw new BadRequest({ message: "label not found" });
     }
   }
+
+  async update(id: string, name: string): Promise<void> {
+    const { affected } = await this.repository.update({ id }, { name });
+    console.log(affected);
+    if (affected === 0) {
+      throw new BadRequest({ message: "label not found" });
+    }
+  }
 }
 
 export default LabelRepository;

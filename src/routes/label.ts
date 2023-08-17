@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post("/", passportAuth, labelApi.createLabel); // POST /api/labels
 router.delete("/:id", passportAuth, labelApi.deleteLabel); // DELETE /api/labels/:id
+router.put("/:id", passportAuth, labelApi.updateLabel); // PUT /api/labels/:id
 
 export = router;

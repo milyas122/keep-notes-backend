@@ -21,4 +21,8 @@ export class LabelService {
   async deleteLabel(id: string): Promise<void> {
     await this.labelRepository.delete(id);
   }
+
+  async editLabel(id: string, name: string): Promise<void> {
+    await this.labelRepository.update(id, name);
+  }
 }

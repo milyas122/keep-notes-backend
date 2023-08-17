@@ -34,3 +34,16 @@ export async function deleteLabel(req: Request, res: Response) {
     return errorHandler(res, error, { logKey: "DeleteNote" });
   }
 }
+
+export async function updateLabel(req: Request, res: Response) {
+  try {
+    const labelId = req.params.id;
+    const { name } = await validate(schema.labelSchema, req.body);
+
+    await service.editLabel(labelId, name);
+
+    return res.status(200).json({ message: "label updated successfully" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "UpdateNote" });
+  }
+}
