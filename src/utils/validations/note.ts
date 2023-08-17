@@ -58,4 +58,11 @@ const deleteNoteSchema = object().shape({
 
 const archiveNotesSchema = deleteNoteSchema;
 
-export { noteSchema, deleteNoteSchema, archiveNotesSchema };
+const unArchiveNotesSchema = archiveNotesSchema;
+
+export {
+  noteSchema,
+  deleteNoteSchema,
+  archiveNotesSchema,
+  unArchiveNotesSchema,
+};

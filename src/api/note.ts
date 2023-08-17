@@ -5,6 +5,7 @@ import {
   noteSchema,
   deleteNoteSchema,
   archiveNotesSchema,
+  unArchiveNotesSchema,
 } from "@/utils/validations/note";
 import { NoteService } from "@/services/note";
 import { User } from "@/db/entities";
@@ -44,7 +45,7 @@ export async function deleteNotes(
   }
 }
 
-export async function archiveNote(
+export async function archiveNotes(
   req: Request,
   res: Response
 ): Promise<Response> {
@@ -57,5 +58,23 @@ export async function archiveNote(
     return res.status(200).json({ message: "notes archived successfully" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "ArchiveNote" });
+  }
+}
+
+export async function unArchiveNotes(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const { noteIds } = await validate(unArchiveNotesSchema, req.body);
+
+    await service.unArchiveNotes(userId, noteIds);
+
+    return res
+      .status(200)
+      .json({ message: "notes are unArchived successfully" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "UnArchiveNote" });
   }
 }

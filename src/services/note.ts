@@ -101,6 +101,10 @@ class NoteService {
   async archiveNotes(userId: string, noteIds: string[]): Promise<void> {
     await this.userNoteRepo.archiveNote(userId, noteIds);
   }
+
+  async unArchiveNotes(userId: string, noteIds: string[]): Promise<void> {
+    await this.userNoteRepo.unArchiveNote(userId, noteIds);
+  }
 }
 
 export { NoteService };
