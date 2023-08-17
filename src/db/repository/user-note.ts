@@ -1,7 +1,8 @@
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { UserNote } from "../entities";
 import dataSource from "../index";
 import { CreateUserNoteOption } from "./types";
+import { BadRequest } from "@/utils/errors/custom-errors";
 
 type GetByNoteIdsAndUserIdOptions = {
   userNote_id: string;
@@ -46,6 +47,17 @@ class UserNoteRepository {
 
   async deleteByIds(ids: string[]): Promise<void> {
     await this.repository.delete(ids);
+  }
+
+  async archiveNote(userId, ids: string[]): Promise<void> {
+    const { affected } = await this.repository.update(
+      { user: { id: userId }, note: { id: In(ids) } },
+      { archived: true }
+    );
+
+    if (affected === 0) {
+      throw new BadRequest({ message: "notes not found" });
+    }
   }
 }
 

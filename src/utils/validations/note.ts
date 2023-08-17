@@ -56,4 +56,6 @@ const deleteNoteSchema = object().shape({
   noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
 });
 
-export { noteSchema, deleteNoteSchema };
+const archiveNotesSchema = deleteNoteSchema;
+
+export { noteSchema, deleteNoteSchema, archiveNotesSchema };
