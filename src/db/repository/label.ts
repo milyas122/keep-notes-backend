@@ -61,6 +61,13 @@ class LabelRepository {
       await this.repository.save(newLabel);
     }
   }
+
+  async delete(id: string): Promise<void> {
+    const { affected } = await this.repository.delete(id);
+    if (affected === 0) {
+      throw new BadRequest({ message: "label not found" });
+    }
+  }
 }
 
 export default LabelRepository;

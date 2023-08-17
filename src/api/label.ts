@@ -22,3 +22,15 @@ export async function createLabel(
     return errorHandler(res, error, { logKey: "CreateNote" });
   }
 }
+
+export async function deleteLabel(req: Request, res: Response) {
+  try {
+    const labelId = req.params.id;
+
+    await service.deleteLabel(labelId);
+
+    return res.status(200).json({ message: "label deleted successfully" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "DeleteNote" });
+  }
+}

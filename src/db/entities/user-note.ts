@@ -31,7 +31,7 @@ export default class UserNote {
   @ManyToOne(() => Note, (note) => note.userNote, { onDelete: "CASCADE" })
   note: Note;
 
-  @ManyToMany(() => Label, { onDelete: "CASCADE" })
+  @ManyToMany(() => Label, { onDelete: "SET NULL" })
   @JoinTable()
   labels: Label[];
 }

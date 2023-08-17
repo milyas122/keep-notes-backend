@@ -17,4 +17,8 @@ export class LabelService {
 
     await this.labelRepository.create({ userId, name, user });
   }
+
+  async deleteLabel(id: string): Promise<void> {
+    await this.labelRepository.delete(id);
+  }
 }
