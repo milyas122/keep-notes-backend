@@ -28,7 +28,7 @@ export const noteSchema = object()
     imageUrls: array().of(string().url()).label("Images"),
     theme: string().label("Theme"),
     pined: boolean().label("Pined").default(false),
-    label: string().label("Label"),
+    labels: array().of(string().required()).label("Label"),
     noteList: array()
       .of(noteList)
       .when("hasCheckBoxEnable", {

@@ -3,7 +3,7 @@ export type CreateNoteOptions = {
   imageUrls?: string[];
   theme?: string;
   pined?: boolean;
-  label?: string;
+  labels?: string[];
 } & (CreateSimpleNote | CreateNoteList);
 
 export type CreateSimpleNote = {

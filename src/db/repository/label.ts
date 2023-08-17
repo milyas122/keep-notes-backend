@@ -1,8 +1,8 @@
 import { Label, User } from "../entities";
 import dataSource from "../index";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import UserRepository from "./user";
-import { ApiError } from "@/utils/errors/custom-errors";
+import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 
 type FindLabelOption = {
   id?: string;
@@ -38,6 +38,17 @@ class LabelRepository {
     const label = await this.repository.findOne({ where });
 
     return label;
+  }
+
+  async getLabelsByIds(userId: string, names: string[]): Promise<Label[]> {
+    const labels = await this.repository.find({
+      where: { name: In(names), user: { id: userId } },
+    });
+
+    if (names.length === 0) {
+      throw new BadRequest({ message: "labels not found" });
+    }
+    return labels;
   }
 
   async create(args: CreateLabelOptions): Promise<void> {

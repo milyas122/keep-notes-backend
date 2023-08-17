@@ -3,7 +3,7 @@ import * as entity from "../entities";
 export type CreateUserNoteOption = {
   pined: boolean;
   user: entity.User;
-  label?: entity.Label;
+  labels?: entity.Label[];
   note: entity.Note;
   owner: boolean;
 };

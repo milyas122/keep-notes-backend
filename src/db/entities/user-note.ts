@@ -4,6 +4,8 @@ import {
   Entity,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import User from "./user";
 import Note from "./note";
@@ -29,7 +31,7 @@ export default class UserNote {
   @ManyToOne(() => Note, (note) => note.userNote, { onDelete: "CASCADE" })
   note: Note;
 
-  @ManyToOne(() => Label, { onDelete: "CASCADE" })
-  @JoinColumn()
-  label: Label;
+  @ManyToMany(() => Label, { onDelete: "CASCADE" })
+  @JoinTable()
+  labels: Label[];
 }

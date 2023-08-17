@@ -31,12 +31,9 @@ class NoteService {
 
     userNoteArgs.pined = args.pined;
 
-    if (args?.label) {
-      const labelObj = await this.labelRepo.getLabel({
-        name: args.label,
-        userId,
-      });
-      labelObj && (userNoteArgs.label = labelObj);
+    if (args?.labels && args.labels.length > 0) {
+      const labels = await this.labelRepo.getLabelsByIds(userId, args.labels);
+      labels && (userNoteArgs.labels = labels);
     }
 
     const userObj = await this.userRepo.findUser({ id: userId });
