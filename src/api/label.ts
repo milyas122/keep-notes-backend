@@ -47,3 +47,14 @@ export async function updateLabel(req: Request, res: Response) {
     return errorHandler(res, error, { logKey: "UpdateNote" });
   }
 }
+
+export async function getUserLabels(req: Request, res: Response) {
+  try {
+    const userId = (req.user as User).id;
+    const labels = await service.getUserLabels(userId);
+
+    return res.status(200).json({ message: "success", labels });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "UpdateNote" });
+  }
+}

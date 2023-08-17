@@ -51,6 +51,13 @@ class LabelRepository {
     return labels;
   }
 
+  async getLabelsByUserId(userId: string): Promise<Label[]> {
+    const labels = await this.repository.find({
+      where: { user: { id: userId } },
+    });
+    return labels;
+  }
+
   async create(args: CreateLabelOptions): Promise<void> {
     const { userId, name, user } = args;
     const isExist = await this.getLabel({ userId, name });
