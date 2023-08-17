@@ -1,4 +1,4 @@
-import { Label } from "../entities";
+import { Label, User } from "../entities";
 import dataSource from "../index";
 import { Repository } from "typeorm";
 import UserRepository from "./user";
@@ -8,6 +8,12 @@ type FindLabelOption = {
   id?: string;
   name?: string;
   userId?: string;
+};
+
+type CreateLabelOptions = {
+  userId: string;
+  name: string;
+  user: User;
 };
 
 const userRepo = new UserRepository();
@@ -34,15 +40,11 @@ class LabelRepository {
     return label;
   }
 
-  async createLabel(args: { userId: string; name: string }): Promise<void> {
-    const { userId, name } = args;
+  async create(args: CreateLabelOptions): Promise<void> {
+    const { userId, name, user } = args;
     const isExist = await this.getLabel({ userId, name });
 
     if (!isExist) {
-      const user = await userRepo.findUser({ id: userId });
-
-      if (!user) throw new ApiError({ message: "user not exist" });
-
       const newLabel = await this.repository.create({ name, user });
 
       await this.repository.save(newLabel);
