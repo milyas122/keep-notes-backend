@@ -5,6 +5,6 @@ import noteRoutes from "./note";
 const router = express.Router();
 
 router.use("/auth", userRoutes);
-router.use("/note", noteRoutes);
+router.use("/notes", noteRoutes);
 
 export = router;
