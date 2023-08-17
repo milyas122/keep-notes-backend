@@ -1,12 +1,7 @@
 import { Response, Request } from "express";
 import { errorHandler } from "@/utils/errors";
 import { validate } from "@/utils/validations";
-import {
-  noteSchema,
-  deleteNoteSchema,
-  archiveNotesSchema,
-  unArchiveNotesSchema,
-} from "@/utils/validations/note";
+import * as schema from "@/utils/validations/note";
 import { NoteService } from "@/services/note";
 import { User } from "@/db/entities";
 
@@ -19,7 +14,7 @@ export async function createNote(
   try {
     const userId = (req.user as User).id;
 
-    const cleanedFields = await validate(noteSchema, req.body);
+    const cleanedFields = await validate(schema.noteSchema, req.body);
 
     await service.createNote(userId, cleanedFields);
 
@@ -35,7 +30,7 @@ export async function deleteNotes(
 ): Promise<Response> {
   try {
     const userId = (req.user as User).id;
-    const { noteIds } = await validate(deleteNoteSchema, req.body);
+    const { noteIds } = await validate(schema.deleteNoteSchema, req.body);
 
     await service.deleteNotes(userId, noteIds);
     return res.status(200).json({ message: "notes deleted successfully" });
@@ -51,7 +46,7 @@ export async function archiveNotes(
 ): Promise<Response> {
   try {
     const userId = (req.user as User).id;
-    const { noteIds } = await validate(archiveNotesSchema, req.body);
+    const { noteIds } = await validate(schema.archiveNotesSchema, req.body);
 
     await service.archiveNotes(userId, noteIds);
 
@@ -67,7 +62,7 @@ export async function unArchiveNotes(
 ): Promise<Response> {
   try {
     const userId = (req.user as User).id;
-    const { noteIds } = await validate(unArchiveNotesSchema, req.body);
+    const { noteIds } = await validate(schema.unArchiveNotesSchema, req.body);
 
     await service.unArchiveNotes(userId, noteIds);
 
@@ -76,5 +71,18 @@ export async function unArchiveNotes(
       .json({ message: "notes are unArchived successfully" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "UnArchiveNote" });
+  }
+}
+
+export async function pinNotes(req: Request, res: Response): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const { noteIds } = await validate(schema.pinNotesSchema, req.body);
+
+    await service.pinNotes(userId, noteIds);
+
+    return res.status(200).json({ message: "notes are pinned successfully" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "PinNotes" });
   }
 }

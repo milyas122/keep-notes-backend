@@ -8,5 +8,6 @@ router.post("/", passportAuth, noteApi.createNote); // POST /api/note
 router.delete("/", passportAuth, noteApi.deleteNotes); // DELETE /api/note
 router.post("/archive", passportAuth, noteApi.archiveNotes); // POST /api/note/archive
 router.post("/unarchive", passportAuth, noteApi.unArchiveNotes); // POST /api/note/unarchive
+router.post("/pin", passportAuth, noteApi.pinNotes); // POST /api/note/pin
 
 export = router;

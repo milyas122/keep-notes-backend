@@ -20,7 +20,7 @@ const noteList = object().shape({
     }),
 });
 
-const noteSchema = object()
+export const noteSchema = object()
   .shape({
     title: string().label("Title"),
     content: string().label("Content"),
@@ -52,17 +52,13 @@ const noteSchema = object()
     }
   );
 
-const deleteNoteSchema = object().shape({
+const notesIdSchema = object().shape({
   noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
 });
+export const deleteNoteSchema = notesIdSchema;
 
-const archiveNotesSchema = deleteNoteSchema;
+export const archiveNotesSchema = notesIdSchema;
 
-const unArchiveNotesSchema = archiveNotesSchema;
+export const unArchiveNotesSchema = notesIdSchema;
 
-export {
-  noteSchema,
-  deleteNoteSchema,
-  archiveNotesSchema,
-  unArchiveNotesSchema,
-};
+export const pinNotesSchema = notesIdSchema;
