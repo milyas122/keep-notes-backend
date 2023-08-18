@@ -6,10 +6,10 @@ const router = express.Router();
 
 router.post("/", passportAuth, noteApi.createNote); // POST /api/note
 router.delete("/", passportAuth, noteApi.deleteNotes); // DELETE /api/note
-router.post("/archive", passportAuth, noteApi.archiveNotes); // POST /api/note/archive
-router.post("/unarchive", passportAuth, noteApi.unArchiveNotes); // POST /api/note/unarchive
-router.post("/pin", passportAuth, noteApi.pinNotes); // POST /api/note/pin
-router.post("/unpin", passportAuth, noteApi.unPinNotes); // POST /api/note/unpin
+router.put("/archive", passportAuth, noteApi.archiveNotes); // PUT /api/note/archive
+router.put("/unarchive", passportAuth, noteApi.unArchiveNotes); // PUT /api/note/unarchive
+router.put("/pin", passportAuth, noteApi.pinNotes); // PUT /api/note/pin
+router.put("/unpin", passportAuth, noteApi.unPinNotes); // PUT /api/note/unpin
 router.put("/change-label", passportAuth, noteApi.changeNotesLabel); // PUT /api/note/change-label
 
 export = router;
