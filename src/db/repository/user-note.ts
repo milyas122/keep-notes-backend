@@ -1,5 +1,5 @@
-import { In, Repository } from "typeorm";
-import { UserNote } from "../entities";
+import { In, Index, Repository } from "typeorm";
+import { Label, UserNote } from "../entities";
 import dataSource from "../index";
 import { CreateUserNoteOption } from "./types";
 import { BadRequest } from "@/utils/errors/custom-errors";
@@ -91,6 +91,43 @@ class UserNoteRepository {
     if (affected === 0) {
       throw new BadRequest({ message: "notes not found" });
     }
+  }
+
+  async changeNotesLabels(
+    userId: string,
+    args: { label: Label; noteIds: string[]; selected: boolean }
+  ): Promise<void> {
+    const userNotes = await this.repository.find({
+      where: { user: { id: userId }, note: { id: In(args.noteIds) } },
+      relations: {
+        labels: true,
+      },
+      select: ["id"],
+    });
+
+    let labelIndex: number;
+
+    let done = false;
+
+    userNotes.forEach((item) => {
+      // check provided label is associated or not?
+      const associated = item.labels.find((label, index) => {
+        labelIndex = index;
+        return label.id === args.label.id;
+      });
+
+      !associated &&
+        args.selected &&
+        item.labels.push(args.label) &&
+        (done = true);
+
+      associated &&
+        !args.selected &&
+        item.labels.splice(labelIndex) &&
+        (done = true);
+    });
+
+    done && (await this.repository.save(userNotes));
   }
 }
 

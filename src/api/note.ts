@@ -102,3 +102,22 @@ export async function unPinNotes(
     return errorHandler(res, error, { logKey: "PinNotes" });
   }
 }
+
+export async function changeNotesLabel(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const cleanedFields = await validate(
+      schema.changeNoteLabelSchema,
+      req.body
+    );
+
+    await service.changeNotesLabel(userId, cleanedFields);
+
+    return res.status(200).json({ message: "success" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "ChangeNotesLabel" });
+  }
+}

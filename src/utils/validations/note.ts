@@ -64,3 +64,9 @@ export const unArchiveNotesSchema = notesIdSchema;
 export const pinNotesSchema = notesIdSchema;
 
 export const unPinNotesSchema = notesIdSchema;
+
+export const changeNoteLabelSchema = object().shape({
+  label: string().uuid().required().label("Label"),
+  noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
+  selected: boolean().required().label("Select"),
+});

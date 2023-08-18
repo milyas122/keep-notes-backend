@@ -110,6 +110,21 @@ class NoteService {
   async unPinNotes(userId: string, noteIds: string[]): Promise<void> {
     await this.userNoteRepo.unPinNotes(userId, noteIds);
   }
+
+  async changeNotesLabel(
+    userId: string,
+    args: { label: string; noteIds: string[]; selected: boolean }
+  ): Promise<void> {
+    const label = await this.labelRepo.getLabel({ id: args.label });
+
+    if (!label) throw new BadRequest({ message: "label not found" });
+
+    await this.userNoteRepo.changeNotesLabels(userId, {
+      label,
+      noteIds: args.noteIds,
+      selected: args.selected,
+    });
+  }
 }
 
 export { NoteService };

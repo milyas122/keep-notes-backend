@@ -10,5 +10,6 @@ router.post("/archive", passportAuth, noteApi.archiveNotes); // POST /api/note/a
 router.post("/unarchive", passportAuth, noteApi.unArchiveNotes); // POST /api/note/unarchive
 router.post("/pin", passportAuth, noteApi.pinNotes); // POST /api/note/pin
 router.post("/unpin", passportAuth, noteApi.unPinNotes); // POST /api/note/unpin
+router.put("/change-label", passportAuth, noteApi.changeNotesLabel); // PUT /api/note/change-label
 
 export = router;
