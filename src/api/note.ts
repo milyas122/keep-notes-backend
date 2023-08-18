@@ -24,6 +24,18 @@ export async function createNote(
   }
 }
 
+export async function getNotes(req: Request, res: Response): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const label = req.query?.label ? req.query.label.toString() : undefined;
+
+    const notes = await service.getUserNoteList(userId, label);
+
+    return res.status(200).json({ message: "success", notes });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "GetNotes" });
+  }
+}
 export async function deleteNotes(
   req: Request,
   res: Response

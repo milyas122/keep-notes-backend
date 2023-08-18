@@ -5,6 +5,7 @@ import passportAuth from "@/middleware/passport-config";
 const router = express.Router();
 
 router.post("/", passportAuth, noteApi.createNote); // POST /api/note
+router.get("/", passportAuth, noteApi.getNotes); // GET /api/note
 router.delete("/", passportAuth, noteApi.deleteNotes); // DELETE /api/note
 router.put("/archive", passportAuth, noteApi.archiveNotes); // PUT /api/note/archive
 router.put("/unarchive", passportAuth, noteApi.unArchiveNotes); // PUT /api/note/unarchive

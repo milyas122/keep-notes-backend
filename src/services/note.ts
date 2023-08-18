@@ -2,6 +2,7 @@ import { CreateNoteOptions } from "./types";
 import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
+import { UserNote } from "@/db/entities";
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -67,6 +68,48 @@ class NoteService {
     userNoteArgs.owner = true; // Help to find an owner of the note
 
     await this.userNoteRepo.createUserNote({ ...userNoteArgs });
+  }
+
+  async getUserNoteList(userId: string, labelName?: string): Promise<any> {
+    let labelId;
+
+    if (labelName) {
+      const label = await this.labelRepo.getLabel({
+        name: labelName,
+        userId,
+        select: ["id"],
+      });
+
+      if (!label) throw new BadRequest({ message: "label not found" });
+
+      labelId = label?.id;
+    }
+
+    const userNotes = await this.userNoteRepo.getUserNotes(userId, labelId);
+
+    const notes = {
+      pined: [],
+      notes: [],
+      archived: [],
+    };
+    userNotes.forEach((item) => {
+      const obj = {
+        id: item.note.id,
+        archived: item.archived,
+        pined: item.pined,
+        labels: item.labels,
+        ...item.note,
+      };
+
+      if (item.archived && labelName) {
+        notes["archived"].push(obj);
+      } else if (item.pined && labelName) {
+        notes["pined"].push(obj);
+      } else {
+        notes["notes"].push(obj);
+      }
+    });
+    return notes;
   }
 
   async deleteNotes(userId: string, ids: string[]): Promise<void> {

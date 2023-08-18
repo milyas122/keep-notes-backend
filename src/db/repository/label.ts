@@ -8,6 +8,7 @@ type FindLabelOption = {
   id?: string;
   name?: string;
   userId?: string;
+  select?: string[];
 };
 
 type CreateLabelOptions = {
@@ -35,7 +36,11 @@ class LabelRepository {
       where["user"] = { id: args.userId };
     }
 
-    const label = await this.repository.findOne({ where });
+    const selected = [];
+    const select =
+      args?.select && args.select.length > 0 && selected.concat(args.select);
+
+    const label = await this.repository.findOne({ where, select });
 
     return label;
   }

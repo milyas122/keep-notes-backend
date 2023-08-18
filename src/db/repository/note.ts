@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { Note } from "../entities";
+import { Label, Note } from "../entities";
 import dataSource from "../index";
 import { CreateNoteOption } from "./types";
 import { BadRequest } from "@/utils/errors/custom-errors";

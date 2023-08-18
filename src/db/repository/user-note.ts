@@ -28,6 +28,24 @@ class UserNoteRepository {
     return userNoteObj;
   }
 
+  async getUserNotes(userId: string, labelId?: string): Promise<UserNote[]> {
+    let where = { where: {} };
+
+    if (labelId) {
+      where["where"] = { user: { id: userId }, labels: { id: labelId } };
+    } else {
+      where["where"] = { user: { id: userId } };
+    }
+
+    const notes = await this.repository.find({
+      ...where,
+      relations: ["labels", "note"],
+      select: ["id", "archived", "pined"],
+    });
+
+    return notes;
+  }
+
   async getByUserIdAndNoteIds(
     userId: string,
     noteIds: string[]
