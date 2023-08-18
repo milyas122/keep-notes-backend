@@ -70,7 +70,7 @@ class UserNoteRepository {
   async archiveNote(userId, ids: string[]): Promise<void> {
     const { affected } = await this.repository.update(
       { user: { id: userId }, note: { id: In(ids) } },
-      { archived: true }
+      { archived: true, pined: false }
     );
 
     if (affected === 0) {
@@ -92,7 +92,7 @@ class UserNoteRepository {
   async pinNotes(userId, ids: string[]): Promise<void> {
     const { affected } = await this.repository.update(
       { user: { id: userId }, note: { id: In(ids) } },
-      { pined: true }
+      { pined: true, archived: false }
     );
 
     if (affected === 0) {
