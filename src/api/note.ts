@@ -4,6 +4,7 @@ import { validate } from "@/utils/validations";
 import * as schema from "@/utils/validations/note";
 import { NoteService } from "@/services/note";
 import { User } from "@/db/entities";
+import { BadRequest } from "@/utils/errors/custom-errors";
 
 const service = new NoteService();
 
@@ -131,5 +132,24 @@ export async function changeNotesLabel(
     return res.status(200).json({ message: "success" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "ChangeNotesLabel" });
+  }
+}
+
+export async function addCollaborator(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const noteId = req.params.id;
+    const userId = (req.user as User).id;
+
+    const email = req.body.email;
+    if (!email) throw new BadRequest({ message: "email is required field" });
+
+    await service.addCollaborator(email, noteId, userId);
+
+    return res.status(200).json({ message: "success" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "AddCollaborator" });
   }
 }

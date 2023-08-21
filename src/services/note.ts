@@ -168,6 +168,38 @@ class NoteService {
       selected: args.selected,
     });
   }
+
+  async addCollaborator(
+    collaboratorEmail: string,
+    noteId: string,
+    userId: string
+  ): Promise<void> {
+    const user = await this.userRepo.findUser({ email: collaboratorEmail });
+
+    if (!user) throw new BadRequest({ message: "user not found" });
+
+    if (userId === user.id)
+      throw new BadRequest({
+        message: "you can't add yourself as a collaborator",
+      });
+
+    const note = await this.noteRepo.getNoteById(noteId);
+
+    if (!note) throw new BadRequest({ message: "note not found" });
+
+    const userNote = await this.userNoteRepo.getByUserIdAndNoteIds(user.id, [
+      note.id,
+    ]);
+
+    if (userNote[0].user_id !== user.id) {
+      await this.userNoteRepo.createUserNote({
+        owner: false,
+        pined: false,
+        user: user,
+        note: note,
+      });
+    }
+  }
 }
 
 export { NoteService };
