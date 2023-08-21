@@ -179,8 +179,7 @@ class NoteService {
 
   async addCollaborator(
     collaboratorEmail: string,
-    noteId: string,
-    userId: string
+    noteId: string
   ): Promise<void> {
     const user = await this.userRepo.findUser({ email: collaboratorEmail });
 
@@ -209,6 +208,19 @@ class NoteService {
     });
 
     await this.collaboratorRepo.create({ user, note, owner: false });
+  }
+
+  async removeCollaborator(
+    noteId: string,
+    collaboratorIds: string[]
+  ): Promise<void> {
+    const owner = await this.collaboratorRepo.getOwner(noteId);
+
+    collaboratorIds.includes(owner.id) &&
+      collaboratorIds.splice(collaboratorIds.indexOf(owner.id)); // restrict to remove owner from collaborator
+
+    collaboratorIds.length > 0 &&
+      (await this.collaboratorRepo.remove(collaboratorIds));
   }
 }
 

@@ -13,5 +13,10 @@ router.put("/pin", passportAuth, noteApi.pinNotes); // PUT /api/notes/pin
 router.put("/unpin", passportAuth, noteApi.unPinNotes); // PUT /api/notes/unpin
 router.put("/change-label", passportAuth, noteApi.changeNotesLabel); // PUT /api/notes/change-label
 router.put("/:id/add-collaborator", passportAuth, noteApi.addCollaborator); // POST /api/notes/:id/add-collaborator
+router.put(
+  "/:id/remove-collaborator",
+  passportAuth,
+  noteApi.removeCollaborator
+); // PUT /api/notes/remove-collaborator
 
 export = router;

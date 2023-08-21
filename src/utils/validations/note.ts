@@ -70,3 +70,11 @@ export const changeNoteLabelSchema = object().shape({
   noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
   selected: boolean().required().label("Select"),
 });
+
+export const collaboratorIdsSchema = object().shape({
+  collaboratorIds: array()
+    .of(string().uuid())
+    .required()
+    .min(1)
+    .label("CollaboratorIds"),
+});

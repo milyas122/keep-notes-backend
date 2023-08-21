@@ -1,6 +1,7 @@
 import * as entities from "../entities";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import dataSource from "../index";
+import { BadRequest } from "@/utils/errors/custom-errors";
 
 type CreateOptions = {
   user: entities.User;
@@ -15,7 +16,7 @@ export default class CollaboratorRepository {
     this.repository = dataSource.getRepository(entities.Collaborator);
   }
 
-  async create({ user, note, owner }): Promise<void> {
+  async create({ user, note, owner }: CreateOptions): Promise<void> {
     const collaborator = await this.repository.create({ owner, user, note });
     await this.repository.save(collaborator);
   }
@@ -32,5 +33,22 @@ export default class CollaboratorRepository {
     });
 
     return collaborator;
+  }
+
+  async getOwner(noteId): Promise<entities.Collaborator> {
+    const collaborator = await this.repository.findOne({
+      where: { note: { id: noteId }, owner: true },
+      relations: ["user"],
+    });
+    return collaborator;
+  }
+  async remove(ids: string[]): Promise<void> {
+    const { affected } = await this.repository.delete({
+      id: In(ids),
+      owner: false,
+    });
+    if (affected === 0) {
+      throw new BadRequest({ message: "collaborator not found" });
+    }
   }
 }

@@ -141,15 +141,32 @@ export async function addCollaborator(
 ): Promise<Response> {
   try {
     const noteId = req.params.id;
-    const userId = (req.user as User).id;
 
     const email = req.body.email;
     if (!email) throw new BadRequest({ message: "email is required field" });
 
-    await service.addCollaborator(email, noteId, userId);
+    await service.addCollaborator(email, noteId);
 
     return res.status(200).json({ message: "success" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "AddCollaborator" });
+  }
+}
+
+export async function removeCollaborator(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const noteId = req.params.id;
+    const { collaboratorIds } = await validate(
+      schema.collaboratorIdsSchema,
+      req.body
+    );
+
+    await service.removeCollaborator(noteId, collaboratorIds);
+    return res.status(200).json({ message: "success" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "RemoveCollaborator" });
   }
 }
