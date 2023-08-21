@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   ManyToOne,
-  JoinColumn,
   ManyToMany,
   JoinTable,
 } from "typeorm";
@@ -31,7 +30,17 @@ export default class UserNote {
   @ManyToOne(() => Note, (note) => note.userNote, { onDelete: "CASCADE" })
   note: Note;
 
-  @ManyToMany(() => Label, { onDelete: "SET NULL" })
-  @JoinTable()
+  @ManyToMany(() => Label, { onDelete: "CASCADE" })
+  @JoinTable({
+    name: "userNote_labels_label",
+    joinColumn: {
+      name: "userNoteId",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "labelId",
+      referencedColumnName: "id",
+    },
+  })
   labels: Label[];
 }

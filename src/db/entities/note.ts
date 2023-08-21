@@ -12,6 +12,7 @@ import NoteList from "./note-list";
 import NoteImage from "./note-image";
 import UserNote from "./user-note";
 import Theme from "./theme";
+import Collaborator from "./collaborator";
 
 @Entity({ name: "note" })
 export default class Note {
@@ -50,4 +51,7 @@ export default class Note {
 
   @ManyToOne(() => Theme, (theme) => theme.notes, { onDelete: "SET NULL" })
   theme: Theme;
+
+  @OneToMany(() => Collaborator, (collaborator) => collaborator.note)
+  collaborators: Collaborator[];
 }

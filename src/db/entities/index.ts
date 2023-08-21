@@ -6,6 +6,7 @@ import NoteList from "./note-list";
 import UserNote from "./user-note";
 import Theme from "./theme";
 import Label from "./label";
+import Collaborator from "./collaborator";
 
 export {
   User,
@@ -16,4 +17,5 @@ export {
   UserNote,
   Theme,
   Label,
+  Collaborator,
 };
