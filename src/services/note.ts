@@ -186,27 +186,29 @@ class NoteService {
 
     if (!user) throw new BadRequest({ message: "user not found" });
 
-    if (userId === user.id)
+    const isCollaborator = await this.collaboratorRepo.getCollaborator({
+      userId: user.id,
+      noteId,
+    });
+    console.log(isCollaborator);
+
+    if (isCollaborator)
       throw new BadRequest({
-        message: "you can't add yourself as a collaborator",
+        message: `${user.email} is already in collaborator`,
       });
 
     const note = await this.noteRepo.getNoteById(noteId);
 
     if (!note) throw new BadRequest({ message: "note not found" });
 
-    const userNote = await this.userNoteRepo.getByUserIdAndNoteIds(user.id, [
-      note.id,
-    ]);
+    await this.userNoteRepo.createUserNote({
+      owner: false,
+      pined: false,
+      user: user,
+      note: note,
+    });
 
-    if (userNote[0].user_id !== user.id) {
-      await this.userNoteRepo.createUserNote({
-        owner: false,
-        pined: false,
-        user: user,
-        note: note,
-      });
-    }
+    await this.collaboratorRepo.create({ user, note, owner: false });
   }
 }
 
