@@ -6,6 +6,7 @@ import NoteRepository from "./note";
 import ThemeRepository from "./theme";
 import UserNoteRepository from "./user-note";
 import UserRepository from "./user";
+import CollaboratorRepository from "./collaborator";
 
 export {
   LabelRepository,
@@ -16,4 +17,5 @@ export {
   ThemeRepository,
   UserNoteRepository,
   UserRepository,
+  CollaboratorRepository,
 };

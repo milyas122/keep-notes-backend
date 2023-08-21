@@ -2,7 +2,7 @@ import { CreateNoteOptions } from "./types";
 import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
-import { UserNote } from "@/db/entities";
+import { Collaborator, UserNote } from "@/db/entities";
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -12,6 +12,7 @@ class NoteService {
   private imageRepo: repository.NoteImageRepository;
   private themeRepo: repository.ThemeRepository;
   private noteListRepo: repository.NoteListRepository;
+  private collaboratorRepo: repository.CollaboratorRepository;
 
   constructor() {
     this.userNoteRepo = new repository.UserNoteRepository();
@@ -21,6 +22,7 @@ class NoteService {
     this.imageRepo = new repository.NoteImageRepository();
     this.themeRepo = new repository.ThemeRepository();
     this.noteListRepo = new repository.NoteListRepository();
+    this.collaboratorRepo = new repository.CollaboratorRepository();
   }
 
   async createNote(
@@ -66,6 +68,12 @@ class NoteService {
     if (!note) throw new ApiError({ message: "something bad happened .." });
     userNoteArgs.note = note;
     userNoteArgs.owner = true; // Help to find an owner of the note
+
+    await this.collaboratorRepo.create({
+      note,
+      user: userObj,
+      owner: true,
+    });
 
     await this.userNoteRepo.createUserNote({ ...userNoteArgs });
   }
