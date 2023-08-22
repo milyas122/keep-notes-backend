@@ -1,6 +1,7 @@
 import * as entity from "../entities";
 
 export type CreateUserNoteOption = {
+  id: string;
   pined: boolean;
   user: entity.User;
   labels?: entity.Label[];

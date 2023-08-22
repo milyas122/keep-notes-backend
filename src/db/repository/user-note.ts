@@ -76,6 +76,10 @@ class UserNoteRepository {
     await this.repository.delete(ids);
   }
 
+  async deleteBulk(args: { user: string; note: string }[]) {
+    // await this.repository.remove({where})
+  }
+
   async archiveNote(userId, ids: string[]): Promise<void> {
     const { affected } = await this.repository.update(
       { user: { id: userId }, note: { id: In(ids) } },

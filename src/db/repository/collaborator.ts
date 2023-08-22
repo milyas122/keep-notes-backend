@@ -7,6 +7,7 @@ type CreateOptions = {
   user: entities.User;
   note: entities.Note;
   owner: boolean;
+  userNoteId: string;
 };
 
 export default class CollaboratorRepository {
@@ -16,8 +17,18 @@ export default class CollaboratorRepository {
     this.repository = dataSource.getRepository(entities.Collaborator);
   }
 
-  async create({ user, note, owner }: CreateOptions): Promise<void> {
-    const collaborator = await this.repository.create({ owner, user, note });
+  async create({
+    user,
+    note,
+    owner,
+    userNoteId,
+  }: CreateOptions): Promise<void> {
+    const collaborator = await this.repository.create({
+      owner,
+      user,
+      note,
+      userNoteId,
+    });
     await this.repository.save(collaborator);
   }
 
@@ -33,6 +44,13 @@ export default class CollaboratorRepository {
     });
 
     return collaborator;
+  }
+
+  async getCollaborators(ids: string[]): Promise<entities.Collaborator[]> {
+    const collaborators = await this.repository.find({
+      where: { id: In(ids) },
+    });
+    return collaborators;
   }
 
   async createBulk(args: CreateOptions[]) {

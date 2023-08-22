@@ -158,12 +158,13 @@ export async function removeCollaborator(
 ): Promise<Response> {
   try {
     const noteId = req.params.id;
+    const userId = (req.user as User).id;
     const { collaboratorIds } = await validate(
       schema.collaboratorIdsSchema,
       req.body
     );
-
-    await service.removeCollaborator(noteId, collaboratorIds);
+    // console.log(collaboratorIds);
+    await service.removeCollaborator(userId, noteId, collaboratorIds);
     return res.status(200).json({ message: "success" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "RemoveCollaborator" });

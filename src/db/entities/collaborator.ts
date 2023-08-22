@@ -15,4 +15,7 @@ export default class Collaborator {
 
   @Column()
   owner: boolean;
+
+  @Column()
+  userNoteId: string;
 }

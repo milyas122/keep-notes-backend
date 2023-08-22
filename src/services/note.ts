@@ -3,6 +3,7 @@ import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
 import { Collaborator, UserNote, User } from "@/db/entities";
+import { v4 as uuidv4 } from "uuid";
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -69,13 +70,15 @@ class NoteService {
     userNoteArgs.note = note;
     userNoteArgs.owner = true; // Help to find an owner of the note
 
+    const userNoteId = uuidv4();
     await this.collaboratorRepo.create({
       note,
       user: userObj,
       owner: true,
+      userNoteId,
     });
 
-    await this.userNoteRepo.createUserNote({ ...userNoteArgs });
+    await this.userNoteRepo.createUserNote({ id: userNoteId, ...userNoteArgs });
   }
 
   async getUserNoteList(userId: string, labelName?: string): Promise<any> {
@@ -212,15 +215,18 @@ class NoteService {
     const newCollaborators = users
       .filter((user) => !added.includes(user.email))
       .map((user) => {
+        const userNoteId = uuidv4();
+
         if (!added.includes(user.email)) {
           newUserNotes.push({
+            id: userNoteId,
             owner: false,
             pined: false,
             user: user,
             note: note,
             archived: false,
           });
-          return { user, note, owner: false };
+          return { user, note, owner: false, userNoteId: userNoteId };
         }
       });
 
@@ -230,18 +236,28 @@ class NoteService {
     }
   }
 
-  async removeCollaborator(
-    noteId: string,
-    collaboratorIds: string[]
-  ): Promise<void> {
-    const owner = await this.collaboratorRepo.getOwner(noteId);
+  // async removeCollaborator(
+  //   currentUser: string,
+  //   noteId: string,
+  //   collaboratorIds: string[]
+  // ): Promise<void> {
+  //   const owner = await this.collaboratorRepo.getOwner(noteId);
 
-    collaboratorIds.includes(owner.id) &&
-      collaboratorIds.splice(collaboratorIds.indexOf(owner.id)); // restrict to remove owner from collaborator
+  //   collaboratorIds.includes(owner.id) &&
+  //     collaboratorIds.splice(collaboratorIds.indexOf(owner.id), 1); // restrict to remove owner from collaborator
 
-    collaboratorIds.length > 0 &&
-      (await this.collaboratorRepo.remove(collaboratorIds));
-  }
+  //   if (collaboratorIds.length > 0) {
+  //     const collaborators = await this.collaboratorRepo.getCollaborators(
+  //       collaboratorIds
+  //     );
+  //     const userNoteIds = collaborators.map((collaborator) => {
+  //       return collaborator.userNoteId;
+  //     });
+
+  //     await this.collaboratorRepo.remove(collaboratorIds);
+  //     await this.userNoteRepo.deleteByIds(userNoteIds);
+  //   }
+  // }
 }
 
 export { NoteService };
