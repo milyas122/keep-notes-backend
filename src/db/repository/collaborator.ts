@@ -35,6 +35,15 @@ export default class CollaboratorRepository {
     return collaborator;
   }
 
+  async createBulk(args: CreateOptions[]) {
+    await this.repository
+      .createQueryBuilder()
+      .insert()
+      .into(entities.Collaborator)
+      .values(args)
+      .execute();
+  }
+
   async getOwner(noteId): Promise<entities.Collaborator> {
     const collaborator = await this.repository.findOne({
       where: { note: { id: noteId }, owner: true },
@@ -42,6 +51,7 @@ export default class CollaboratorRepository {
     });
     return collaborator;
   }
+
   async remove(ids: string[]): Promise<void> {
     const { affected } = await this.repository.delete({
       id: In(ids),

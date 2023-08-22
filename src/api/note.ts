@@ -141,11 +141,10 @@ export async function addCollaborator(
 ): Promise<Response> {
   try {
     const noteId = req.params.id;
+    const userId = (req.user as User).id;
+    const { emails } = await validate(schema.addCollaboratorSchema, req.body);
 
-    const email = req.body.email;
-    if (!email) throw new BadRequest({ message: "email is required field" });
-
-    await service.addCollaborator(email, noteId);
+    await service.addCollaborator(userId, emails, noteId);
 
     return res.status(200).json({ message: "success" });
   } catch (error) {

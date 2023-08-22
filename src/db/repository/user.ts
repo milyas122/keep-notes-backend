@@ -1,6 +1,6 @@
 import { User } from "../entities";
 import dataSource from "../index";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 
 interface FindUserOptions {
   id?: string;
@@ -28,6 +28,14 @@ class UserRepository {
     const user = await this.repository.findOne({ where });
 
     return user;
+  }
+
+  async findUsers(emails: string[]): Promise<User[]> {
+    const users = await this.repository.find({
+      where: { email: In(emails) },
+      select: ["id", "email", "name"],
+    });
+    return users;
   }
 
   async createUser({ email, password, name }: UserArgs): Promise<void> {

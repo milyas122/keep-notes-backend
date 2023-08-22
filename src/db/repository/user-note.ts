@@ -1,5 +1,5 @@
-import { In, Index, Repository } from "typeorm";
-import { Label, UserNote } from "../entities";
+import { In, Repository } from "typeorm";
+import { Label, UserNote, Note, User } from "../entities";
 import dataSource from "../index";
 import { CreateUserNoteOption } from "./types";
 import { BadRequest } from "@/utils/errors/custom-errors";
@@ -28,6 +28,15 @@ class UserNoteRepository {
     return userNoteObj;
   }
 
+  async createBulk(args: CreateUserNoteOption[]): Promise<void> {
+    await this.repository
+      .createQueryBuilder()
+      .insert()
+      .into(UserNote)
+      .values(args)
+      .execute();
+  }
+
   async getUserNotes(userId: string, labelId?: string): Promise<UserNote[]> {
     let where = { where: {} };
 
@@ -39,7 +48,7 @@ class UserNoteRepository {
 
     const notes = await this.repository.find({
       ...where,
-      relations: ["labels", "note"],
+      relations: ["labels", "note", "note.collaborators"],
       select: ["id", "archived", "pined"],
     });
 

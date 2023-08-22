@@ -23,12 +23,17 @@ class NoteRepository {
   }
 
   async getNoteById(id: string): Promise<Note> {
-    const note = await this.repository.findOne({
-      where: {
-        id,
-      },
-      relations: ["noteList", "noteList.noteItemList", "images", "theme"],
-    });
+    const note = await this.repository
+      .createQueryBuilder("note")
+      .leftJoinAndSelect("note.noteList", "noteList")
+      .leftJoinAndSelect("noteList.noteItemList", "noteItemList")
+      .leftJoinAndSelect("note.theme", "theme")
+      .leftJoinAndSelect("note.images", "images")
+      .leftJoinAndSelect("note.collaborators", "collaborator")
+      .leftJoin("collaborator.user", "user")
+      .addSelect(["user.id", "user.email", "user.name"])
+      .where("note.id = :id", { id })
+      .getOne();
 
     if (!note) {
       throw new BadRequest({ message: "note not found" });

@@ -78,3 +78,7 @@ export const collaboratorIdsSchema = object().shape({
     .min(1)
     .label("CollaboratorIds"),
 });
+
+export const addCollaboratorSchema = object().shape({
+  emails: array().of(string().email()).required().min(1).label("Emails"),
+});

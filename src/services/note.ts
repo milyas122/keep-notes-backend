@@ -2,7 +2,7 @@ import { CreateNoteOptions } from "./types";
 import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
-import { Collaborator, UserNote } from "@/db/entities";
+import { Collaborator, UserNote, User } from "@/db/entities";
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -177,37 +177,57 @@ class NoteService {
     });
   }
 
+  // addCollaborators
   async addCollaborator(
-    collaboratorEmail: string,
+    currentUser: string,
+    collaboratorEmails: string[],
     noteId: string
   ): Promise<void> {
-    const user = await this.userRepo.findUser({ email: collaboratorEmail });
+    const users = await this.userRepo.findUsers(collaboratorEmails);
 
-    if (!user) throw new BadRequest({ message: "user not found" });
-
-    const isCollaborator = await this.collaboratorRepo.getCollaborator({
-      userId: user.id,
-      noteId,
-    });
-    console.log(isCollaborator);
-
-    if (isCollaborator)
-      throw new BadRequest({
-        message: `${user.email} is already in collaborator`,
-      });
+    if (!users) throw new BadRequest({ message: "users not found" });
 
     const note = await this.noteRepo.getNoteById(noteId);
 
     if (!note) throw new BadRequest({ message: "note not found" });
 
-    await this.userNoteRepo.createUserNote({
-      owner: false,
-      pined: false,
-      user: user,
-      note: note,
+    const collaborators = note.collaborators;
+
+    let isAllow = false;
+
+    const added = collaborators.map((user) => {
+      if (user.user.id === currentUser) {
+        isAllow = true;
+      }
+      return user.user.email;
     });
 
-    await this.collaboratorRepo.create({ user, note, owner: false });
+    if (!isAllow) {
+      throw new BadRequest({
+        message: "your are not allowed to add collaborators",
+      });
+    }
+
+    const newUserNotes = [];
+    const newCollaborators = users
+      .filter((user) => !added.includes(user.email))
+      .map((user) => {
+        if (!added.includes(user.email)) {
+          newUserNotes.push({
+            owner: false,
+            pined: false,
+            user: user,
+            note: note,
+            archived: false,
+          });
+          return { user, note, owner: false };
+        }
+      });
+
+    if (newCollaborators.length > 0) {
+      await this.collaboratorRepo.createBulk(newCollaborators);
+      await this.userNoteRepo.createBulk(newUserNotes);
+    }
   }
 
   async removeCollaborator(
