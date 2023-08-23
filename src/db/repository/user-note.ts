@@ -48,13 +48,6 @@ class UserNoteRepository {
 
     const notes = await this.repository.find({
       ...where,
-      // relations: [
-      //   "labels",
-      //   "note",
-      //   "note.collaborators",
-      //   "note.collaborators.user",
-      // ],
-      // select: ["id", "archived", "pined"],
       relations: {
         labels: true,
         note: {
