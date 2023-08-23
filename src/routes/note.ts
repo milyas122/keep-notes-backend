@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post("/", passportAuth, noteApi.createNote); // POST /api/notes
 router.get("/", passportAuth, noteApi.getNotes); // GET /api/notes
+router.get("/:id", passportAuth, noteApi.noteDetail); // GET /api/notes/:id
 router.delete("/", passportAuth, noteApi.deleteNotes); // DELETE /api/notes
 router.put("/archive", passportAuth, noteApi.archiveNotes); // PUT /api/notes/archive
 router.put("/unarchive", passportAuth, noteApi.unArchiveNotes); // PUT /api/notes/unarchive

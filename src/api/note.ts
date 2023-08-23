@@ -37,6 +37,23 @@ export async function getNotes(req: Request, res: Response): Promise<Response> {
     return errorHandler(res, error, { logKey: "GetNotes" });
   }
 }
+
+export async function noteDetail(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userId = (req.user as User).id;
+    const userNoteId = req.params.id;
+
+    const note = await service.getNote(userId, userNoteId);
+
+    return res.status(200).json({ message: "success", note });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "NoteDetail" });
+  }
+}
+
 export async function deleteNotes(
   req: Request,
   res: Response

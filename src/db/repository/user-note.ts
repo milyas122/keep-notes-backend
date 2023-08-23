@@ -28,6 +28,60 @@ class UserNoteRepository {
     return userNoteObj;
   }
 
+  async getDetailById(
+    id: string,
+    args: { userId?: string }
+  ): Promise<UserNote> {
+    const where = {
+      id,
+    };
+
+    if (args?.userId) {
+      where["user"] = { id: args.userId };
+    }
+
+    const userNote = await this.repository.findOne({
+      where: { ...where },
+      relations: {
+        labels: true,
+        note: {
+          collaborators: { user: true },
+          images: true,
+          theme: true,
+          noteList: { noteItemList: true },
+        },
+      },
+      select: {
+        id: true,
+        archived: true,
+        pined: true,
+        note: {
+          id: true,
+          title: true,
+          content: true,
+          hasCheckBoxEnable: true,
+          updatedAt: true,
+          collaborators: {
+            id: true,
+            owner: true,
+            userNoteId: true,
+            user: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    });
+
+    if (!userNote) {
+      throw new BadRequest({ message: "note not found" });
+    }
+
+    return userNote;
+  }
+
   async createBulk(args: CreateUserNoteOption[]): Promise<void> {
     await this.repository
       .createQueryBuilder()
@@ -103,10 +157,6 @@ class UserNoteRepository {
 
   async deleteByIds(ids: string[]): Promise<void> {
     await this.repository.delete(ids);
-  }
-
-  async deleteBulk(args: { user: string; note: string }[]) {
-    // await this.repository.remove({where})
   }
 
   async archiveNote(userId, ids: string[]): Promise<void> {

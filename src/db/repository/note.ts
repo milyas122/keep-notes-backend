@@ -1,17 +1,14 @@
 import { Repository } from "typeorm";
-import { Label, Note } from "../entities";
+import { Note } from "../entities";
 import dataSource from "../index";
 import { CreateNoteOption } from "./types";
 import { BadRequest } from "@/utils/errors/custom-errors";
-import UserNoteRepository from "./user-note";
 
 class NoteRepository {
   private repository: Repository<Note>;
-  private userNoteRepo: UserNoteRepository;
 
   constructor() {
     this.repository = dataSource.getRepository(Note);
-    this.userNoteRepo = new UserNoteRepository();
   }
 
   async createNote(args: CreateNoteOption): Promise<Note | undefined> {

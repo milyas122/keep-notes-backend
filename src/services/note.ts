@@ -3,6 +3,7 @@ import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
 import { v4 as uuidv4 } from "uuid";
+import { UserNote } from "@/db/entities";
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -112,6 +113,16 @@ class NoteService {
       }
     });
     return notes;
+  }
+
+  async getNote(userId: string, userNoteId: string): Promise<UserNote> {
+    const note = await this.userNoteRepo.getDetailById(userNoteId, { userId });
+    note.note.collaborators = note.note.collaborators.filter((item) => {
+      if (item.user.id !== userId) {
+        return true;
+      }
+    });
+    return note;
   }
 
   async deleteNotes(userId: string, ids: string[]): Promise<void> {
