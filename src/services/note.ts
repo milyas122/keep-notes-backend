@@ -159,8 +159,8 @@ class NoteService {
     await this.userNoteRepo.pinNotes(userId, userNoteIds);
   }
 
-  async unPinNotes(userId: string, noteIds: string[]): Promise<void> {
-    await this.userNoteRepo.unPinNotes(userId, noteIds);
+  async unPinNotes(userId: string, userNoteIds: string[]): Promise<void> {
+    await this.userNoteRepo.unPinNotes(userId, userNoteIds);
   }
 
   async changeNotesLabel(

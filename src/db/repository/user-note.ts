@@ -190,7 +190,7 @@ class UserNoteRepository {
 
   async unPinNotes(userId, ids: string[]): Promise<void> {
     const { affected } = await this.repository.update(
-      { user: { id: userId }, note: { id: In(ids) } },
+      { user: { id: userId }, id: In(ids) },
       { pined: false }
     );
 
