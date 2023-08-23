@@ -201,15 +201,19 @@ class UserNoteRepository {
 
   async changeNotesLabels(
     userId: string,
-    args: { label: Label; noteIds: string[]; selected: boolean }
+    args: { label: Label; userNoteIds: string[]; selected: boolean }
   ): Promise<void> {
     const userNotes = await this.repository.find({
-      where: { user: { id: userId }, note: { id: In(args.noteIds) } },
+      where: { user: { id: userId }, id: In(args.userNoteIds) },
       relations: {
         labels: true,
       },
       select: ["id"],
     });
+
+    if (userNotes.length === 0) {
+      throw new BadRequest({ message: "notes not found" });
+    }
 
     let labelIndex: number;
 
@@ -221,12 +225,15 @@ class UserNoteRepository {
         labelIndex = index;
         return label.id === args.label.id;
       });
+      console.log(associated);
 
+      // When the selected label is not associated with current user note  then we simply add it.
       !associated &&
         args.selected &&
         item.labels.push(args.label) &&
         (done = true);
 
+      //  When The provided label is associated and user needs to unselect it from note.
       associated &&
         !args.selected &&
         item.labels.splice(labelIndex) &&

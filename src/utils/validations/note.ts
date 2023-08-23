@@ -67,7 +67,11 @@ export const unPinNotesSchema = notesIdSchema;
 
 export const changeNoteLabelSchema = object().shape({
   label: string().uuid().required().label("Label"),
-  noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
+  userNoteIds: array()
+    .of(string().uuid())
+    .required()
+    .min(1)
+    .label("UserNoteIds"),
   selected: boolean().required().label("Select"),
 });
 

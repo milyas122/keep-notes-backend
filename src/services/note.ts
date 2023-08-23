@@ -165,7 +165,7 @@ class NoteService {
 
   async changeNotesLabel(
     userId: string,
-    args: { label: string; noteIds: string[]; selected: boolean }
+    args: { label: string; userNoteIds: string[]; selected: boolean }
   ): Promise<void> {
     const label = await this.labelRepo.getLabel({ id: args.label });
 
@@ -173,7 +173,7 @@ class NoteService {
 
     await this.userNoteRepo.changeNotesLabels(userId, {
       label,
-      noteIds: args.noteIds,
+      userNoteIds: args.userNoteIds,
       selected: args.selected,
     });
   }
