@@ -16,7 +16,7 @@ export class LabelService {
 
     if (!user) throw new ApiError({ message: "user not exist" });
 
-    await this.labelRepository.create({ userId, name, user });
+    await this.labelRepository.create({ name, user });
   }
 
   async deleteLabel(id: string): Promise<void> {

@@ -12,7 +12,6 @@ type FindLabelOption = {
 };
 
 type CreateLabelOptions = {
-  userId: string;
   name: string;
   user: User;
 };
@@ -64,8 +63,8 @@ class LabelRepository {
   }
 
   async create(args: CreateLabelOptions): Promise<void> {
-    const { userId, name, user } = args;
-    const isExist = await this.getLabel({ userId, name });
+    const { name, user } = args;
+    const isExist = await this.getLabel({ userId: user.id, name });
 
     if (!isExist) {
       const newLabel = await this.repository.create({ name, user });
