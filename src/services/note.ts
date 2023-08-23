@@ -2,7 +2,6 @@ import { CreateNoteOptions } from "./types";
 import { ApiError, BadRequest } from "@/utils/errors/custom-errors";
 import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
-import { Collaborator, UserNote, User } from "@/db/entities";
 import { v4 as uuidv4 } from "uuid";
 
 class NoteService {
@@ -104,20 +103,12 @@ class NoteService {
       archived: [],
     };
     userNotes.forEach((item) => {
-      const obj = {
-        id: item.note.id,
-        archived: item.archived,
-        pined: item.pined,
-        labels: item.labels,
-        ...item.note,
-      };
-
-      if (item.archived && labelName) {
-        notes["archived"].push(obj);
-      } else if (item.pined && labelName) {
-        notes["pined"].push(obj);
+      if (item.archived) {
+        notes["archived"].push(item);
+      } else if (item.pined) {
+        notes["pined"].push(item);
       } else {
-        notes["notes"].push(obj);
+        notes["notes"].push(item);
       }
     });
     return notes;

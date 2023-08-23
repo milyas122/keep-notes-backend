@@ -48,8 +48,44 @@ class UserNoteRepository {
 
     const notes = await this.repository.find({
       ...where,
-      relations: ["labels", "note", "note.collaborators"],
-      select: ["id", "archived", "pined"],
+      // relations: [
+      //   "labels",
+      //   "note",
+      //   "note.collaborators",
+      //   "note.collaborators.user",
+      // ],
+      // select: ["id", "archived", "pined"],
+      relations: {
+        labels: true,
+        note: {
+          collaborators: { user: true },
+          images: true,
+          theme: true,
+          noteList: { noteItemList: true },
+        },
+      },
+      select: {
+        id: true,
+        archived: true,
+        pined: true,
+        note: {
+          id: true,
+          title: true,
+          content: true,
+          hasCheckBoxEnable: true,
+          updatedAt: true,
+          collaborators: {
+            id: true,
+            owner: true,
+            userNoteId: true,
+            user: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
     });
 
     return notes;
