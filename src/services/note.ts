@@ -125,22 +125,17 @@ class NoteService {
     return note;
   }
 
-  async deleteNotes(userId: string, ids: string[]): Promise<void> {
-    const userNoteList = await this.userNoteRepo.getByUserIdAndNoteIds(
-      userId,
-      ids
-    );
+  async deleteNotes(userNoteIds: string[]): Promise<void> {
+    const userNoteList = await this.userNoteRepo.getByIds(userNoteIds);
 
-    const userNoteIds = [];
     const noteIds = [];
 
-    for (const item of userNoteList) {
-      if (item.userNote_owner === 1) {
-        noteIds.push(item.note_id);
-      } else if (item.userNote_owner === 0) {
-        userNoteIds.push(item.userNote_id);
+    userNoteList.forEach((item) => {
+      if (item.owner === true) {
+        noteIds.push(item.note);
+        userNoteIds.splice(userNoteIds.indexOf(item.id), 1);
       }
-    }
+    });
 
     if (noteIds.length > 0) {
       await this.noteRepo.deleteNote(noteIds);
@@ -148,6 +143,7 @@ class NoteService {
 
     if (userNoteIds.length > 0) {
       await this.userNoteRepo.deleteByIds(userNoteIds);
+      await this.collaboratorRepo.removeByUserNoteIds(userNoteIds);
     }
   }
 

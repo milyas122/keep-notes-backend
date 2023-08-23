@@ -79,4 +79,10 @@ export default class CollaboratorRepository {
       throw new BadRequest({ message: "collaborator not found" });
     }
   }
+  async removeByUserNoteIds(userNoteIds: string[]): Promise<void> {
+    await this.repository.delete({
+      userNoteId: In(userNoteIds),
+      owner: false,
+    });
+  }
 }

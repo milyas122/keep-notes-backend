@@ -59,13 +59,11 @@ export async function deleteNotes(
   res: Response
 ): Promise<Response> {
   try {
-    const userId = (req.user as User).id;
     const { noteIds } = await validate(schema.deleteNoteSchema, req.body);
 
-    await service.deleteNotes(userId, noteIds);
+    await service.deleteNotes(noteIds);
     return res.status(200).json({ message: "notes deleted successfully" });
   } catch (error) {
-    console.log(error);
     return errorHandler(res, error, { logKey: "DeleteNotes" });
   }
 }

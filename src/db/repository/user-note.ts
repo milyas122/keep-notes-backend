@@ -138,19 +138,15 @@ class UserNoteRepository {
     return notes;
   }
 
-  async getByUserIdAndNoteIds(
-    userId: string,
-    noteIds: string[]
-  ): Promise<GetByNoteIdsAndUserIdOptions[]> {
-    const userNoteList = await this.repository
-      .createQueryBuilder("userNote")
-      .leftJoinAndSelect("userNote.note", "note")
-      .leftJoinAndSelect("userNote.user", "user")
-      .where("note.id IN (:...noteIds)", { noteIds })
-      .andWhere("user.id = :userId", { userId })
-      .select(["userNote.id", "userNote.owner", "user.id", "note.id"])
-      .orderBy("userNote.owner", "DESC")
-      .getRawMany();
+  async getByIds(userNoteIds: string[]): Promise<UserNote[]> {
+    const userNoteList = await this.repository.find({
+      where: { id: In(userNoteIds) },
+      loadRelationIds: true,
+    });
+
+    if (userNoteList.length === 0) {
+      throw new BadRequest({ message: "notes not found" });
+    }
 
     return userNoteList;
   }
