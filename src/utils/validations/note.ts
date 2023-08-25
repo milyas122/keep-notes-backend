@@ -1,4 +1,4 @@
-import { object, string, boolean, array, number } from "yup";
+import { object, string, date, boolean, array, number } from "yup";
 
 const noteListItem = object().shape({
   content: string().required().label("Content"),
@@ -55,6 +55,7 @@ export const noteSchema = object()
 const notesIdSchema = object().shape({
   noteIds: array().of(string().uuid()).required().min(1).label("NoteIds"),
 });
+
 export const deleteNoteSchema = notesIdSchema;
 
 export const archiveNotesSchema = notesIdSchema;
@@ -85,4 +86,9 @@ export const collaboratorIdsSchema = object().shape({
 
 export const addCollaboratorSchema = object().shape({
   emails: array().of(string().email()).required().min(1).label("Emails"),
+});
+
+export const addReminderSchema = object().shape({
+  dateTime: date().required().label("dateTime"),
+  occurrence: number().required().label("occurrence").moreThan(0),
 });

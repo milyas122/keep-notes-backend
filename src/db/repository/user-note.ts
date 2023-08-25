@@ -1,15 +1,8 @@
 import { In, Repository } from "typeorm";
-import { Label, UserNote, Note, User } from "../entities";
+import { Label, UserNote } from "../entities";
 import dataSource from "../index";
 import { CreateUserNoteOption } from "./types";
 import { BadRequest } from "@/utils/errors/custom-errors";
-
-type GetByNoteIdsAndUserIdOptions = {
-  userNote_id: string;
-  user_id: string;
-  userNote_owner: number;
-  note_id: string;
-};
 
 class UserNoteRepository {
   private repository: Repository<UserNote>;
@@ -80,6 +73,14 @@ class UserNoteRepository {
     }
 
     return userNote;
+  }
+
+  async getObjById(id: string): Promise<UserNote> {
+    const note = await this.repository.findOne({
+      where: { id },
+      loadRelationIds: true,
+    });
+    return note;
   }
 
   async createBulk(args: CreateUserNoteOption[]): Promise<void> {

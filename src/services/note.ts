@@ -4,6 +4,12 @@ import * as repository from "@/db/repository";
 import * as repoType from "@/db/repository/types";
 import { v4 as uuidv4 } from "uuid";
 import { UserNote } from "@/db/entities";
+import schedule from "node-schedule";
+
+type CreateReminderOptions = {
+  dateTime: Date;
+  occurrence: number;
+};
 
 class NoteService {
   private userNoteRepo: repository.UserNoteRepository;
@@ -14,6 +20,7 @@ class NoteService {
   private themeRepo: repository.ThemeRepository;
   private noteListRepo: repository.NoteListRepository;
   private collaboratorRepo: repository.CollaboratorRepository;
+  private reminderRepo: repository.ReminderRepository;
 
   constructor() {
     this.userNoteRepo = new repository.UserNoteRepository();
@@ -24,6 +31,7 @@ class NoteService {
     this.themeRepo = new repository.ThemeRepository();
     this.noteListRepo = new repository.NoteListRepository();
     this.collaboratorRepo = new repository.CollaboratorRepository();
+    this.reminderRepo = new repository.ReminderRepository();
   }
 
   async createNote(
@@ -178,7 +186,6 @@ class NoteService {
     });
   }
 
-  // addCollaborators
   async addCollaborator(
     currentUser: string,
     collaboratorEmails: string[],
@@ -253,6 +260,54 @@ class NoteService {
 
       await this.collaboratorRepo.remove(collaboratorIds);
       await this.userNoteRepo.deleteByIds(userNoteIds);
+    }
+  }
+
+  async addReminder(
+    userId: string,
+    userNoteId: string,
+    args: CreateReminderOptions
+  ): Promise<void> {
+    const { dateTime, occurrence } = args;
+
+    const userNote = await this.userNoteRepo.getObjById(userNoteId);
+
+    if (!userNote) throw new BadRequest({ message: "note not found" });
+
+    const user = userNote.user as unknown;
+
+    if (user !== userId) {
+      throw new BadRequest({ message: "you are not allowed to add reminder" });
+    }
+
+    const month = dateTime.getMonth();
+    const day = dateTime.getDate();
+    const hours = dateTime.getHours();
+    const mins = dateTime.getMinutes();
+
+    const jobReference = uuidv4().toString();
+
+    const job = schedule.scheduleJob(
+      jobReference,
+      {
+        rule: `0 ${mins + 1} ${hours} ${day} ${month + 1} *`,
+        tz: "Asia/Karachi",
+      },
+      () => {
+        console.log("Slack Integration will be done after basic api structure");
+      }
+    );
+
+    try {
+      await this.reminderRepo.create({
+        dateTime,
+        occurrence: occurrence - 1,
+        userNote,
+        id: jobReference,
+      });
+    } catch (error) {
+      job.cancel();
+      throw new Error(error);
     }
   }
 }

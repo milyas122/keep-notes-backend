@@ -1,3 +1,5 @@
+import * as yup from "yup";
+import * as schema from "@/utils/validations/note";
 export type CreateNoteOptions = {
   title?: string;
   imageUrls?: string[];

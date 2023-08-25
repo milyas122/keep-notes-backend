@@ -4,7 +4,6 @@ import { validate } from "@/utils/validations";
 import * as schema from "@/utils/validations/note";
 import { NoteService } from "@/services/note";
 import { User } from "@/db/entities";
-import { BadRequest } from "@/utils/errors/custom-errors";
 
 const service = new NoteService();
 
@@ -182,5 +181,23 @@ export async function removeCollaborator(
     return res.status(200).json({ message: "success" });
   } catch (error) {
     return errorHandler(res, error, { logKey: "RemoveCollaborator" });
+  }
+}
+
+export async function addReminder(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userNoteId = req.params.id;
+    const userId = (req.user as User).id;
+
+    const cleanedFields = await validate(schema.addReminderSchema, req.body);
+
+    await service.addReminder(userId, userNoteId, cleanedFields);
+
+    return res.status(200).json({ message: "success" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "AddReminder" });
   }
 }
