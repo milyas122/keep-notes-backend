@@ -47,7 +47,9 @@ export default class UserNote {
   })
   labels: Label[];
 
-  @OneToOne(() => Reminder)
+  @OneToOne(() => Reminder, (reminder) => reminder.userNote, {
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   reminder: Reminder;
 }

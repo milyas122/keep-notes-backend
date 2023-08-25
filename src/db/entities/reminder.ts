@@ -12,6 +12,8 @@ export default class Reminder {
   @Column()
   occurrence: number;
 
-  @OneToOne(() => UserNote, (userNote) => userNote.reminder)
+  @OneToOne(() => UserNote, (userNote) => userNote.reminder, {
+    onDelete: "CASCADE",
+  })
   userNote: UserNote;
 }
