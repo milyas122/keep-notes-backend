@@ -5,10 +5,13 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import User from "./user";
 import Note from "./note";
 import Label from "./label";
+import Reminder from "./reminder";
 
 @Entity({ name: "userNote" })
 export default class UserNote {
@@ -43,4 +46,8 @@ export default class UserNote {
     },
   })
   labels: Label[];
+
+  @OneToOne(() => Reminder)
+  @JoinColumn()
+  reminder: Reminder;
 }
