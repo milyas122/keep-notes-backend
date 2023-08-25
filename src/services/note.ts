@@ -270,13 +270,15 @@ class NoteService {
   ): Promise<void> {
     const { dateTime, occurrence } = args;
 
-    const userNote = await this.userNoteRepo.getObjById(userNoteId);
+    const userNote = await this.userNoteRepo.getReminder(userNoteId);
 
     if (!userNote) throw new BadRequest({ message: "note not found" });
 
-    const user = userNote.user as unknown;
+    if (userNote.reminder) {
+      throw new BadRequest({ message: "reminder already exist" });
+    }
 
-    if (user !== userId) {
+    if (userNote.user.id !== userId) {
       throw new BadRequest({ message: "you are not allowed to add reminder" });
     }
 
