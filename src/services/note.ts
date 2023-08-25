@@ -301,13 +301,70 @@ class NoteService {
     try {
       await this.reminderRepo.create({
         dateTime,
-        occurrence: occurrence - 1,
+        occurrence: occurrence,
         userNote,
         id: jobReference,
       });
     } catch (error) {
       job.cancel();
       throw new Error(error);
+    }
+  }
+
+  async removeReminder(
+    userId: string,
+    userNoteId: string,
+    done: boolean
+  ): Promise<void> {
+    const userNote = await this.userNoteRepo.getReminder(userNoteId);
+
+    if (!userNote) throw new BadRequest({ message: "note not found" });
+
+    if (userNote.user.id !== userId) {
+      throw new BadRequest({
+        message: "you are not allowed to remove reminder",
+      });
+    }
+
+    const reminder = userNote?.reminder;
+
+    if (!reminder) throw new BadRequest({ message: "notes have no reminder" });
+
+    const dateTime = reminder.dateTime;
+
+    if (done && reminder.occurrence > 1) {
+      // if reminder have an occurrence
+      const rescheduleTo = new Date(dateTime.setDate(dateTime.getDate() + 1)); // add 1 day
+
+      const rule = `0 ${rescheduleTo.getMinutes()} ${rescheduleTo.getHours()} ${rescheduleTo.getDate()} ${
+        rescheduleTo.getMonth() + 1
+      }`;
+
+      //cancel previous reminder
+      const job = schedule.scheduledJobs[reminder.id];
+      job.cancel();
+
+      //create next day reminder
+      schedule.scheduleJob(
+        reminder.id,
+        {
+          rule,
+          tz: "Asia/Karachi",
+        },
+        () => {
+          console.log(
+            "Slack Integration will be done after basic api structure"
+          );
+        }
+      );
+
+      await this.reminderRepo.update({
+        id: reminder.id,
+        dateTime: rescheduleTo,
+        occurrence: reminder.occurrence - 1,
+      });
+    } else {
+      await this.reminderRepo.remove(reminder.id);
     }
   }
 }

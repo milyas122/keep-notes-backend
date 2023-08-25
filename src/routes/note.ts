@@ -21,5 +21,6 @@ router.put(
 ); // PUT /api/notes/remove-collaborator
 
 router.put("/:id/reminder", passportAuth, noteApi.addReminder);
+router.put("/:id/remove-reminder", passportAuth, noteApi.removeReminder);
 
 export = router;

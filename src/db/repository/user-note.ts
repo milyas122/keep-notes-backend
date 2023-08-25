@@ -37,6 +37,7 @@ class UserNoteRepository {
       where: { ...where },
       relations: {
         labels: true,
+        reminder: true,
         note: {
           collaborators: { user: true },
           images: true,
@@ -79,6 +80,22 @@ class UserNoteRepository {
     const note = await this.repository.findOne({
       where: { id },
       loadRelationIds: true,
+    });
+    return note;
+  }
+
+  async getReminder(userNoteId: string): Promise<UserNote> {
+    const note = await this.repository.findOne({
+      where: { id: userNoteId },
+      relations: {
+        reminder: true,
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+        },
+      },
     });
     return note;
   }
