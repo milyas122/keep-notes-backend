@@ -92,3 +92,5 @@ export const addReminderSchema = object().shape({
   dateTime: date().required().label("dateTime"),
   occurrence: number().required().label("occurrence").moreThan(0),
 });
+
+export const updateReminderSchema = addReminderSchema;

@@ -219,3 +219,21 @@ export async function removeReminder(
     return errorHandler(res, error, { logKey: "RemoveReminder" });
   }
 }
+
+export async function updateReminder(
+  req: Request,
+  res: Response
+): Promise<Response> {
+  try {
+    const userNoteId = req.params.id;
+    const userId = (req.user as User).id;
+
+    const cleanedFields = await validate(schema.updateReminderSchema, req.body);
+
+    await service.updateReminder(userId, userNoteId, cleanedFields);
+
+    return res.status(200).json({ message: "success" });
+  } catch (error) {
+    return errorHandler(res, error, { logKey: "UpdateReminder" });
+  }
+}

@@ -22,5 +22,6 @@ router.put(
 
 router.put("/:id/reminder", passportAuth, noteApi.addReminder);
 router.put("/:id/remove-reminder", passportAuth, noteApi.removeReminder);
+router.put("/:id/update-reminder", passportAuth, noteApi.updateReminder);
 
 export = router;
