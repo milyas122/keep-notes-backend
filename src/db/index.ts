@@ -11,6 +11,7 @@ const dataSource = new DataSource({
   synchronize: false,
   database: "google-keep-notes",
   entities: [path.join(__dirname, "./entities/**/*.{ts,js}")],
+  migrations: [path.join(__dirname, "./migrations/**/*.{ts,js}")],
 });
 
 export default dataSource;

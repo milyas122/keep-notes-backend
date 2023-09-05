@@ -4,6 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "typeorm": "env-cmd typeorm-ts-node-commonjs -d ./src/db/index.ts",
     "build": "env-cmd rimraf ./build && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "npm run build && env-cmd node build/index.js",
     "dev": "env-cmd nodemon"
