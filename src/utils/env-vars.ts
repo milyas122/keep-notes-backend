@@ -12,3 +12,9 @@ export const dbEnvVars = {
 export const appEnvVars = {
   jwtSecret: process.env.JWT_SECRET,
 };
+
+export const awsEnvVars = {
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  bucketName: process.env.BUCKET_NAME,
+};
