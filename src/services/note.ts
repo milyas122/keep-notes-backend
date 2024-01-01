@@ -110,7 +110,7 @@ class NoteService {
 
     const notes = {
       pined: [],
-      notes: [],
+      others: [],
       archived: [],
     };
     userNotes.forEach((item) => {
@@ -119,7 +119,7 @@ class NoteService {
       } else if (item.pined) {
         notes["pined"].push(item);
       } else {
-        notes["notes"].push(item);
+        notes["others"].push(item);
       }
     });
     return notes;
