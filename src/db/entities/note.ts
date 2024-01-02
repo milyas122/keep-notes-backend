@@ -22,7 +22,7 @@ export default class Note {
   @Column({ nullable: true })
   title: string;
 
-  @Column({ nullable: true })
+  @Column({ type: "longtext", nullable: true })
   content: string;
 
   @Column({ default: false })
