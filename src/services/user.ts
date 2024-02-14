@@ -19,6 +19,8 @@ interface SignInResponse {
   name: string;
 }
 
+interface SignUpResponse extends SignInResponse {}
+
 class UserService {
   private repository: UserRepository;
 
@@ -26,7 +28,11 @@ class UserService {
     this.repository = new UserRepository();
   }
 
-  async Signup({ email, password, name }: SignupArgs): Promise<void> {
+  async Signup({
+    email,
+    password,
+    name,
+  }: SignupArgs): Promise<{ user: SignUpResponse; token: string }> {
     const isUser = await this.repository.findUser({ email });
     if (isUser) {
       throw new BadRequest({
@@ -37,7 +43,15 @@ class UserService {
 
     const hash = await createHashPassword(password);
 
-    await this.repository.createUser({ email, password: hash, name });
+    const user = await this.repository.createUser({
+      email,
+      password: hash,
+      name,
+    });
+
+    const token = await generateToken(user);
+
+    return { user: { id: user.id, email: user.email, name: user.name }, token };
   }
 
   async SignIn({

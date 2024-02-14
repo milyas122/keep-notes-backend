@@ -9,8 +9,8 @@ const service = new UserService();
 async function userSignup(req: Request, res: Response): Promise<Response> {
   try {
     const cleanedFields = await validate(userSchema, req.body);
-    await service.Signup({ ...cleanedFields });
-    return res.status(201).json({ message: "user created successfully" });
+    const result = await service.Signup({ ...cleanedFields });
+    return res.status(201).json({ ...result });
   } catch (error) {
     return errorHandler(res, error, { logKey: "UserSignup" });
   }

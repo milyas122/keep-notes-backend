@@ -8,6 +8,7 @@ router.post("/", passportAuth, noteApi.createNote); // POST /api/notes
 router.get("/", passportAuth, noteApi.getNotes); // GET /api/notes
 router.get("/:id", passportAuth, noteApi.noteDetail); // GET /api/notes/:id
 router.delete("/", passportAuth, noteApi.deleteNotes); // DELETE /api/notes
+// get archive notes of a specific user
 router.put("/archive", passportAuth, noteApi.archiveNotes); // PUT /api/notes/archive
 router.put("/unarchive", passportAuth, noteApi.unArchiveNotes); // PUT /api/notes/unarchive
 router.put("/pin", passportAuth, noteApi.pinNotes); // PUT /api/notes/pin
